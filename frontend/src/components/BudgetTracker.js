@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function BudgetTracker({ userId }) {
   const [username, setUsername] = useState(""); // Store user's name
-  const [budget, setBudget] = useState(0); // Total budget
+  const [budget, setBudget] = useState(0); // Total budget (constant)
   const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
   const [amount, setAmount] = useState(""); // Expenditure amount
   const [date, setDate] = useState(""); // Expenditure date
@@ -26,11 +26,13 @@ function BudgetTracker({ userId }) {
         `https://budget-tracker-backend-t9tw.onrender.com/get_user/${userId}`
       );
       setUsername(responseUser.data.username); // Set username
+
+      // Set total budget (constant)
       setBudget(responseUser.data.budget);
-      setRemainingBudget(
-        responseUser.data.budget -
-          responseExpenditures.data.reduce((total, exp) => total + exp.amount, 0)
-      );
+
+      // Calculate remaining budget by subtracting total expenditures from the total budget
+      const totalExpenditures = responseExpenditures.data.reduce((total, exp) => total + exp.amount, 0);
+      setRemainingBudget(responseUser.data.budget - totalExpenditures);
     } catch (err) {
       console.error(err);
     }
