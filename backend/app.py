@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_bcrypt import Bcrypt  # Import Bcrypt for password hashing
+from flask_bcrypt import Bcrypt
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -10,8 +10,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tra
 db = SQLAlchemy(app)  # Initialize SQLAlchemy
 bcrypt = Bcrypt(app)  # Initialize Bcrypt for password hashing
 
-# Enable CORS for all routes
-CORS(app)
+# Enable CORS for all routes and restrict it to your frontend's origin
+CORS(app, resources={r"/*": {"origins": "https://budget-tracker-frontend-dysk.onrender.com"}})
 
 # User model
 class User(db.Model):
@@ -27,14 +27,6 @@ class Expenditure(db.Model):
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.String(10), nullable=False)
     note = db.Column(db.String(200))
-
-# Add headers to handle CORS preflight requests
-@app.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")  # Allow all origins for now
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-    return response
 
 # Route: Register a new user with hashed password
 @app.route('/register', methods=['POST'])
@@ -124,5 +116,4 @@ def get_user(user_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables in the database if they don't exist yet
-    # app.run(debug=True, port=5001)  # Run the Flask development server on port 5001
-    app.run(port=5001)
+    app.run(port=5001)  # Run the Flask development server on port 5001
