@@ -17,13 +17,13 @@ function BudgetTracker({ userId }) {
     try {
       // Fetch all expenditures for the user
       const responseExpenditures = await axios.get(
-        `https://budget-tracker-backend.onrender.com/get_expenditures/${userId}`
+        `https://budget-tracker-backend-t9tw.onrender.com/get_expenditures/${userId}`
       );
       setExpenditures(responseExpenditures.data);
 
       // Fetch the user's budget and username
       const responseUser = await axios.get(
-        `https://budget-tracker-backend.onrender.com/get_user/${userId}`
+        `https://budget-tracker-backend-t9tw.onrender.com/get_user/${userId}`
       );
       setUsername(responseUser.data.username); // Set username
       setBudget(responseUser.data.budget);
@@ -43,7 +43,7 @@ function BudgetTracker({ userId }) {
   // Handle setting a new budget
   const handleSetBudget = async () => {
     try {
-      await axios.post("https://budget-tracker-backend.onrender.com/set_budget", {
+      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/set_budget", {
         user_id: userId,
         budget,
       });
@@ -57,7 +57,7 @@ function BudgetTracker({ userId }) {
   // Handle adding a new expenditure
   const handleAddExpenditure = async () => {
     try {
-      await axios.post("https://budget-tracker-backend.onrender.com/add_expenditure", {
+      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
         user_id: userId,
         amount: parseFloat(amount),
         date,
