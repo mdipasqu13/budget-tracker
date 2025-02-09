@@ -13,7 +13,11 @@ function Auth({ setUserId }) {
     const endpoint = isLogin ? "/login" : "/register";
 
     try {
-      const response = await axios.post(`http://localhost:5001${endpoint}`, {
+    //   const response = await axios.post(`http://localhost:5001${endpoint}`, {
+    //     username,
+    //     password,
+    //   });
+      const response = await axios.post(`https://budget-tracker-backend.onrender.com${endpoint}`, {
         username,
         password,
       });
