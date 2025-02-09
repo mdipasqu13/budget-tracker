@@ -17,7 +17,7 @@ function Auth({ setUserId }) {
     //     username,
     //     password,
     //   });
-      const response = await axios.post(`https://budget-tracker-backend-t9tw.onrender.com`, {
+      const response = await axios.post(`https://budget-tracker-backend-t9tw.onrender.com${endpoint}`, {
         username,
         password,
       });
