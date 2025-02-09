@@ -124,4 +124,5 @@ def get_user(user_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables in the database if they don't exist yet
-    app.run(debug=True, port=5001)  # Run the Flask development server on port 5001
+    # app.run(debug=True, port=5001)  # Run the Flask development server on port 5001
+    app.run(port=5001)
