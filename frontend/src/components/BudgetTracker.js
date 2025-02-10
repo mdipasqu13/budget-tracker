@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function BudgetTracker({ userId }) {
   const [username, setUsername] = useState(""); // Store user's name
   const [budget, setBudget] = useState(0); // Total budget left
-//   const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
+  const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
   const [amount, setAmount] = useState(""); // Expenditure amount
   const [date, setDate] = useState(""); // Expenditure date
   const [note, setNote] = useState(""); // Expenditure note
