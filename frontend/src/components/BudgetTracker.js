@@ -96,7 +96,7 @@ function BudgetTracker({ userId }) {
       {/* Display Total and Remaining Budget */}
       <div>
         <h3>Total Budget: ${budget.toFixed(2)}</h3>
-        <h3>Remaining Budget: ${remainingBudget.toFixed(2)}</h3>
+        {/* <h3>Remaining Budget: ${remainingBudget.toFixed(2)}</h3> */}
       </div>
 
       {/* Set Budget Section */}
