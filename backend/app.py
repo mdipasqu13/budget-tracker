@@ -3,14 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 
-# Initialize Flask app
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///budget.db'  # SQLite database file
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///budget.db'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking
 db = SQLAlchemy(app)  # Initialize SQLAlchemy
 bcrypt = Bcrypt(app)  # Initialize Bcrypt for password hashing
 
-# Enable CORS for all routes and restrict it to your frontend's origin
+# Enable CORS for all routes and restrict it to frontend's origin
 CORS(app, resources={r"/*": {"origins": "https://budget-tracker-frontend-dysk.onrender.com"}})
 
 # User model
@@ -58,7 +57,7 @@ def login():
 
     return jsonify({'message': 'Invalid credentials'}), 401
 
-# Route: Set a user's budget
+# Route for setting a user's budget
 @app.route('/set_budget', methods=['POST'])
 def set_budget():
     data = request.json
@@ -71,7 +70,7 @@ def set_budget():
 
     return jsonify({'message': 'User not found'}), 404
 
-# Route: Add an expenditure for a user
+# Route for adding an expenditure for a user
 @app.route('/add_expenditure', methods=['POST'])
 def add_expenditure():
     data = request.json
@@ -112,8 +111,7 @@ def get_user(user_id):
 
     return jsonify({'message': 'User not found'}), 404
 
-# Main entry point of the app
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables in the database if they don't exist yet
-    app.run(port=5001)  # Run the Flask development server on port 5001
+    app.run(port=5001)  # Changed Flask development server to port 5001

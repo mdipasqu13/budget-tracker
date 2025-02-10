@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 function BudgetTracker({ userId }) {
   const [username, setUsername] = useState(""); // Store user's name
-  const [budget, setBudget] = useState(0); // Total budget (constant)
-  const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
+  const [budget, setBudget] = useState(0); // Total budget left
+//   const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
   const [amount, setAmount] = useState(""); // Expenditure amount
   const [date, setDate] = useState(""); // Expenditure date
   const [note, setNote] = useState(""); // Expenditure note
@@ -27,7 +27,7 @@ function BudgetTracker({ userId }) {
       );
       setUsername(responseUser.data.username); // Set username
 
-      // Set total budget (constant)
+      // Set the total budget
       setBudget(responseUser.data.budget);
 
       // Calculate remaining budget by subtracting total expenditures from the total budget
@@ -80,7 +80,7 @@ function BudgetTracker({ userId }) {
   const handleLogout = () => {
     localStorage.removeItem("userId"); // Remove userId from localStorage
     navigate("/"); // Redirect to login/register page
-    window.location.reload(); // Optional: Reload the page to clear state
+    window.location.reload(); // Reload the page to clear state
   };
 
   return (
@@ -93,7 +93,7 @@ function BudgetTracker({ userId }) {
         Logout
       </button>
 
-      {/* Display Total and Remaining Budget */}
+      {/* Display Total Budget*/}
       <div>
         <h3>Total Budget: ${budget.toFixed(2)}</h3>
         {/* <h3>Remaining Budget: ${remainingBudget.toFixed(2)}</h3> */}
