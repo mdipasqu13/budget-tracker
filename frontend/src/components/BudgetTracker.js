@@ -46,18 +46,9 @@ function BudgetTracker({ userId }) {
         user_id: userId,
         budget,
       });
-
-      
-      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
-        user_id: userId,
-        amount: 0, 
-        date: new Date().toISOString().split("T")[0], 
-        note: `Budget set to $${budget}`,
-      });
-
       alert("Budget updated!");
       fetchData();
-      setBudget(""); 
+      setBudget(""); // Clear the budget input field after submission
     } catch (err) {
       console.error(err);
     }
@@ -73,9 +64,9 @@ function BudgetTracker({ userId }) {
       });
       alert("Expenditure added!");
       fetchData();
-      setAmount(""); 
-      setDate(""); 
-      setNote(""); 
+      setAmount(""); // Clear the amount input field after submission
+      setDate(""); // Clear the date input field after submission
+      setNote(""); // Clear the note input field after submission
     } catch (err) {
       console.error(err);
     }
@@ -101,7 +92,7 @@ function BudgetTracker({ userId }) {
         <h3>Remaining Budget: ${remainingBudget}</h3>
         <form
           onSubmit={(e) => {
-            e.preventDefault(); 
+            e.preventDefault(); // Prevent page reload on form submission
             handleSetBudget();
           }}
         >
@@ -122,7 +113,7 @@ function BudgetTracker({ userId }) {
         <h2>Add Expenditure</h2>
         <form
           onSubmit={(e) => {
-            e.preventDefault(); 
+            e.preventDefault(); // Prevent page reload on form submission
             handleAddExpenditure();
           }}
         >
