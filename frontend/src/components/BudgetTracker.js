@@ -46,6 +46,15 @@ function BudgetTracker({ userId }) {
         user_id: userId,
         budget,
       });
+
+      // Add a log entry to expenditures for the budget update
+      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
+        user_id: userId,
+        amount: 0, // No monetary value for setting a budget
+        date: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
+        note: `Budget set to $${budget}`,
+      });
+
       alert("Budget updated!");
       fetchData();
       setBudget(""); // Clear the budget input field after submission
