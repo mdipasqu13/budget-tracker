@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./BudgetTracker.css"; 
+import "./BudgetTracker.css";
 
 function BudgetTracker({ userId }) {
   const [username, setUsername] = useState("");
@@ -48,6 +48,7 @@ function BudgetTracker({ userId }) {
       });
       alert("Budget updated!");
       fetchData();
+      setBudget(""); // Clear the budget input field after submission
     } catch (err) {
       console.error(err);
     }
@@ -63,9 +64,9 @@ function BudgetTracker({ userId }) {
       });
       alert("Expenditure added!");
       fetchData();
-      setAmount("");
-      setDate("");
-      setNote("");
+      setAmount(""); // Clear the amount input field after submission
+      setDate(""); // Clear the date input field after submission
+      setNote(""); // Clear the note input field after submission
     } catch (err) {
       console.error(err);
     }
@@ -80,52 +81,66 @@ function BudgetTracker({ userId }) {
   return (
     <div className="tracker-container">
       <header className="tracker-header">
-        <h1>{username}'s Budget Tracker</h1>
+        <h1>Welcome, {username}</h1>
         <button className="logout-button" onClick={handleLogout}>
           Logout
         </button>
       </header>
 
       <div className="budget-summary">
-        {/* <h2>Total Budget: ${budget}</h2> */}
-        <h2>Remaining Budget: ${remainingBudget}</h2>
-        <input
-          type="number"
-          placeholder="Set New Budget"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          className="input-field"
-        />
-        <button className="button-primary" onClick={handleSetBudget}>
-          Update Budget
-        </button>
+        <h2>Total Budget: ${budget}</h2>
+        <h3>Remaining Budget: ${remainingBudget}</h3>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault(); // Prevent page reload on form submission
+            handleSetBudget();
+          }}
+        >
+          <input
+            type="number"
+            placeholder="Set New Budget"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            className="input-field"
+          />
+          <button type="submit" className="button-primary">
+            Update Budget
+          </button>
+        </form>
       </div>
 
       <div className="add-expenditure">
         <h2>Add Expenditure</h2>
-        <input
-          type="number"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="input-field"
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="input-field"
-        />
-        <input
-          type="text"
-          placeholder="Note"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          className="input-field"
-        />
-        <button className="button-primary" onClick={handleAddExpenditure}>
-          Add Expenditure
-        </button>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault(); // Prevent page reload on form submission
+            handleAddExpenditure();
+          }}
+        >
+          <input
+            type="number"
+            placeholder="Amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="input-field"
+          />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="input-field"
+          />
+          <input
+            type="text"
+            placeholder="Note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="input-field"
+          />
+          <button type="submit" className="button-primary">
+            Add Expenditure
+          </button>
+        </form>
       </div>
 
       <div className="expenditures-list">
@@ -133,7 +148,9 @@ function BudgetTracker({ userId }) {
         {expenditures.length > 0 ? (
           expenditures.map((exp, index) => (
             <div key={index} className="expenditure-item">
-              <p>${exp.amount} - {exp.note} ({exp.date})</p>
+              <p>
+                ${exp.amount} - {exp.note} ({exp.date})
+              </p>
             </div>
           ))
         ) : (
