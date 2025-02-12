@@ -80,15 +80,15 @@ function BudgetTracker({ userId }) {
   return (
     <div className="tracker-container">
       <header className="tracker-header">
-        <h1>Welcome, {username}</h1>
+        <h1>{username}'s Budget Tracker</h1>
         <button className="logout-button" onClick={handleLogout}>
           Logout
         </button>
       </header>
 
       <div className="budget-summary">
-        <h2>Total Budget: ${budget}</h2>
-        <h3>Remaining Budget: ${remainingBudget}</h3>
+        {/* <h2>Total Budget: ${budget}</h2> */}
+        <h2>Remaining Budget: ${remainingBudget}</h2>
         <input
           type="number"
           placeholder="Set New Budget"
