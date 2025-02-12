@@ -1,37 +1,35 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./BudgetTracker.css"; 
 
 function BudgetTracker({ userId }) {
-  const [username, setUsername] = useState(""); // Store user's name
-  const [budget, setBudget] = useState(0); // Total budget left
-  const [remainingBudget, setRemainingBudget] = useState(0); // Remaining budget
-  const [amount, setAmount] = useState(""); // Expenditure amount
-  const [date, setDate] = useState(""); // Expenditure date
-  const [note, setNote] = useState(""); // Expenditure note
-  const [expenditures, setExpenditures] = useState([]); // List of expenditures
-  const navigate = useNavigate(); // Initialize navigate hook
+  const [username, setUsername] = useState("");
+  const [budget, setBudget] = useState(0);
+  const [remainingBudget, setRemainingBudget] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [note, setNote] = useState("");
+  const [expenditures, setExpenditures] = useState([]);
+  const navigate = useNavigate();
 
-  // Fetch user's budget and expenditures when component loads
   const fetchData = async () => {
     try {
-      // Fetch all expenditures for the user
       const responseExpenditures = await axios.get(
         `https://budget-tracker-backend-t9tw.onrender.com/get_expenditures/${userId}`
       );
       setExpenditures(responseExpenditures.data);
 
-      // Fetch the user's budget and username
       const responseUser = await axios.get(
         `https://budget-tracker-backend-t9tw.onrender.com/get_user/${userId}`
       );
-      setUsername(responseUser.data.username); // Set username
-
-      // Set the total budget
+      setUsername(responseUser.data.username);
       setBudget(responseUser.data.budget);
 
-      // Calculate remaining budget by subtracting total expenditures from the total budget
-      const totalExpenditures = responseExpenditures.data.reduce((total, exp) => total + exp.amount, 0);
+      const totalExpenditures = responseExpenditures.data.reduce(
+        (total, exp) => total + exp.amount,
+        0
+      );
       setRemainingBudget(responseUser.data.budget - totalExpenditures);
     } catch (err) {
       console.error(err);
@@ -42,7 +40,6 @@ function BudgetTracker({ userId }) {
     if (userId) fetchData();
   }, [userId]);
 
-  // Handle setting a new budget
   const handleSetBudget = async () => {
     try {
       await axios.post("https://budget-tracker-backend-t9tw.onrender.com/set_budget", {
@@ -50,13 +47,12 @@ function BudgetTracker({ userId }) {
         budget,
       });
       alert("Budget updated!");
-      fetchData(); // Refresh data after updating the budget
+      fetchData();
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Handle adding a new expenditure
   const handleAddExpenditure = async () => {
     try {
       await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
@@ -66,8 +62,7 @@ function BudgetTracker({ userId }) {
         note,
       });
       alert("Expenditure added!");
-
-      fetchData(); // Refresh expenditures and remaining budget after adding one
+      fetchData();
       setAmount("");
       setDate("");
       setNote("");
@@ -76,67 +71,75 @@ function BudgetTracker({ userId }) {
     }
   };
 
-  // Handle logout functionality
   const handleLogout = () => {
-    localStorage.removeItem("userId"); // Remove userId from localStorage
-    navigate("/"); // Redirect to login/register page
-    window.location.reload(); // Reload the page to clear state
+    localStorage.removeItem("userId");
+    navigate("/");
+    window.location.reload();
   };
 
   return (
-    <div>
-      {/* Display Username in Title */}
-      <h2>{username ? `${username}'s Budget Tracker` : "Budget Tracker"}</h2>
+    <div className="tracker-container">
+      <header className="tracker-header">
+        <h1>Welcome, {username}</h1>
+        <button className="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </header>
 
-      {/* Logout Button */}
-      <button onClick={handleLogout} style={{ float: "right", marginTop: "10px" }}>
-        Logout
-      </button>
-
-      {/* Display Total Budget*/}
-      <div>
-        <h3>Total Budget: ${budget.toFixed(2)}</h3>
-        {/* <h3>Remaining Budget: ${remainingBudget.toFixed(2)}</h3> */}
-      </div>
-
-      {/* Set Budget Section */}
-      <div>
+      <div className="budget-summary">
+        <h2>Total Budget: ${budget}</h2>
+        <h3>Remaining Budget: ${remainingBudget}</h3>
         <input
           type="number"
-          placeholder="Set Budget"
+          placeholder="Set New Budget"
           value={budget}
-          onChange={(e) => setBudget(parseFloat(e.target.value))}
+          onChange={(e) => setBudget(e.target.value)}
+          className="input-field"
         />
-        <button onClick={handleSetBudget}>Set Budget</button>
+        <button className="button-primary" onClick={handleSetBudget}>
+          Update Budget
+        </button>
       </div>
 
-      {/* Add Expenditure Section */}
-      <div>
+      <div className="add-expenditure">
+        <h2>Add Expenditure</h2>
         <input
           type="number"
           placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          className="input-field"
         />
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="input-field"
+        />
         <input
           type="text"
-          placeholder="Note (optional)"
+          placeholder="Note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
+          className="input-field"
         />
-        <button onClick={handleAddExpenditure}>Add Expenditure</button>
+        <button className="button-primary" onClick={handleAddExpenditure}>
+          Add Expenditure
+        </button>
       </div>
 
-      {/* Expenditures Log */}
-      <h3>Expenditures:</h3>
-      <ul>
-        {expenditures.map((exp) => (
-          <li key={exp.id}>
-            ${exp.amount.toFixed(2)} - {exp.date} ({exp.note})
-          </li>
-        ))}
-      </ul>
+      <div className="expenditures-list">
+        <h2>Expenditures</h2>
+        {expenditures.length > 0 ? (
+          expenditures.map((exp, index) => (
+            <div key={index} className="expenditure-item">
+              <p>${exp.amount} - {exp.note} ({exp.date})</p>
+            </div>
+          ))
+        ) : (
+          <p>No expenditures yet.</p>
+        )}
+      </div>
     </div>
   );
 }

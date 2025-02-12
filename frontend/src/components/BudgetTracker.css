@@ -1,0 +1,49 @@
+.tracker-container {
+    font-family: 'Roboto', sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .tracker-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .logout-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .budget-summary,
+  .add-expenditure,
+  .expenditures-list {
+    margin-top: 20px;
+  }
+  
+  .input-field {
+    display: block;
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .button-primary {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px;
+  }
+  
+  .expenditure-item {
+    border-bottom: solid thin #ddd;
+  }
+  
