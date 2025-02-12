@@ -46,15 +46,17 @@ function BudgetTracker({ userId }) {
         user_id: userId,
         budget,
       });
-        await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
+
+      
+      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
         user_id: userId,
-        amount: remainingBudget, 
+        amount: 0, 
         date: new Date().toISOString().split("T")[0], 
         note: `Budget set to $${budget}`,
       });
-  
+
       alert("Budget updated!");
-      fetchData(); 
+      fetchData();
       setBudget(""); 
     } catch (err) {
       console.error(err);
