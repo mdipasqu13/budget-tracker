@@ -46,18 +46,16 @@ function BudgetTracker({ userId }) {
         user_id: userId,
         budget,
       });
-
-      // Add a log entry to expenditures for the budget update
-      await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
+        await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
         user_id: userId,
-        amount: 0, // No monetary value for setting a budget
-        date: new Date().toISOString().split("T")[0], // Current date in YYYY-MM-DD format
+        amount: remainingBudget, 
+        date: new Date().toISOString().split("T")[0], 
         note: `Budget set to $${budget}`,
       });
-
+  
       alert("Budget updated!");
-      fetchData();
-      setBudget(""); // Clear the budget input field after submission
+      fetchData(); 
+      setBudget(""); 
     } catch (err) {
       console.error(err);
     }
@@ -73,9 +71,9 @@ function BudgetTracker({ userId }) {
       });
       alert("Expenditure added!");
       fetchData();
-      setAmount(""); // Clear the amount input field after submission
-      setDate(""); // Clear the date input field after submission
-      setNote(""); // Clear the note input field after submission
+      setAmount(""); 
+      setDate(""); 
+      setNote(""); 
     } catch (err) {
       console.error(err);
     }
@@ -101,7 +99,7 @@ function BudgetTracker({ userId }) {
         <h3>Remaining Budget: ${remainingBudget}</h3>
         <form
           onSubmit={(e) => {
-            e.preventDefault(); // Prevent page reload on form submission
+            e.preventDefault(); 
             handleSetBudget();
           }}
         >
@@ -122,7 +120,7 @@ function BudgetTracker({ userId }) {
         <h2>Add Expenditure</h2>
         <form
           onSubmit={(e) => {
-            e.preventDefault(); // Prevent page reload on form submission
+            e.preventDefault(); 
             handleAddExpenditure();
           }}
         >
