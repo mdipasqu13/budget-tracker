@@ -65,7 +65,7 @@ function BudgetTracker({ userId }) {
       });
       setExpenditures([
         ...expenditures,
-        { amount: 0, note: `New budget set to $${budget}`, date: currentDate },
+        { note: `New budget set to $${budget}`, date: currentDate },
       ]);
     } catch (err) {
       console.error(err);
