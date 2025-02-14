@@ -100,7 +100,6 @@ function BudgetTracker({ userId }) {
 
       const newLog = { amount: expenditureAmount, date, note };
 
-      // Prepend the new log to ensure it's at the top
       setExpenditures((prevExpenditures) => [newLog, ...prevExpenditures]);
 
       setRemainingBudget((prev) => prev - expenditureAmount);
@@ -164,6 +163,7 @@ function BudgetTracker({ userId }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Amount"
+          onKeyPress={handleKeyPressAddExpenditure}
         />
         <input
           type="date"
