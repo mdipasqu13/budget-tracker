@@ -11,6 +11,8 @@ function BudgetTracker({ userId }) {
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [expenditures, setExpenditures] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; 
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -59,13 +61,13 @@ function BudgetTracker({ userId }) {
         year: "numeric",
         month: "long",
         day: "numeric",
-        // hour: "numeric",
-        // minute: "numeric",
-        // second: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
       });
       setExpenditures([
         ...expenditures,
-        { note: `New budget set to $${budget}`, date: currentDate },
+        { amount: 0, note: `New budget set to $${budget}`, date: currentDate },
       ]);
     } catch (err) {
       console.error(err);
@@ -108,6 +110,22 @@ function BudgetTracker({ userId }) {
 
   const handleKeyPressAddExpenditure = (e) => {
     if (e.key === "Enter") handleAddExpenditure();
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentExpenditures = expenditures.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(expenditures.length / itemsPerPage)) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   const handleLogout = () => {
@@ -160,8 +178,8 @@ function BudgetTracker({ userId }) {
 
       <div className="expenditure-log">
         <h2>Expenditure Log</h2>
-        {expenditures.length > 0 ? (
-          expenditures.map((exp, index) => (
+        {currentExpenditures.length > 0 ? (
+          currentExpenditures.map((exp, index) => (
             <p key={index}>
               ${exp.amount} - {exp.note} ({exp.date})
             </p>
@@ -169,6 +187,18 @@ function BudgetTracker({ userId }) {
         ) : (
           <p>No expenditures yet.</p>
         )}
+        
+        <div className="pagination-controls">
+          <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+            Previous
+          </button>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === Math.ceil(expenditures.length / itemsPerPage)}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       <button onClick={handleLogout}>Logout</button>
