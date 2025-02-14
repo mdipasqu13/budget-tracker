@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./BudgetTracker.css"; 
+import "./BudgetTracker.css";
 
 function BudgetTracker({ userId }) {
   const [username, setUsername] = useState("");
@@ -41,6 +41,10 @@ function BudgetTracker({ userId }) {
   }, [userId]);
 
   const handleSetBudget = async () => {
+    if (budget <= 0) {
+      alert("Please enter a valid budget.");
+      return;
+    }
     try {
       await axios.post("https://budget-tracker-backend-t9tw.onrender.com/set_budget", {
         user_id: userId,
@@ -54,15 +58,27 @@ function BudgetTracker({ userId }) {
   };
 
   const handleAddExpenditure = async () => {
+    if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      alert("Please enter a valid expenditure amount.");
+      return;
+    }
+    if (parseFloat(amount) > remainingBudget) {
+      alert("Expenditure exceeds remaining budget!");
+      return;
+    }
     try {
+      const expenditureAmount = parseFloat(amount);
       await axios.post("https://budget-tracker-backend-t9tw.onrender.com/add_expenditure", {
         user_id: userId,
-        amount: parseFloat(amount),
+        amount: expenditureAmount,
         date,
         note,
       });
       alert("Expenditure added!");
-      fetchData();
+
+      setExpenditures([...expenditures, { amount: expenditureAmount, date, note }]);
+      setRemainingBudget((prev) => prev - expenditureAmount);
+
       setAmount("");
       setDate("");
       setNote("");
@@ -78,68 +94,58 @@ function BudgetTracker({ userId }) {
   };
 
   return (
-    <div className="tracker-container">
-      <header className="tracker-header">
-        <h1>{username}'s Budget Tracker</h1>
-        <button className="logout-button" onClick={handleLogout}>
-          Logout
-        </button>
-      </header>
+    <div className="container">
+      <h1>Welcome, {username}!</h1>
 
-      <div className="budget-summary">
-        {/* <h2>Total Budget: ${budget}</h2> */}
-        <h2>Remaining Budget: ${remainingBudget}</h2>
+      <div className="budget-section">
+        <h2>Set Your Budget</h2>
         <input
           type="number"
-          placeholder="Set New Budget"
-          value={remainingBudget}
-          onChange={(e) => setBudget(e.target.value)}
-          className="input-field"
+          value={budget}
+          onChange={(e) => setBudget(parseFloat(e.target.value))}
+          placeholder="Enter your budget"
         />
-        <button className="button-primary" onClick={handleSetBudget}>
-          Update Budget
-        </button>
+        <button onClick={handleSetBudget}>Set Budget</button>
+        <p>Remaining Budget: ${remainingBudget.toFixed(2)}</p>
       </div>
 
-      <div className="add-expenditure">
+      <div className="expenditure-section">
         <h2>Add Expenditure</h2>
         <input
           type="number"
-          placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="input-field"
+          placeholder="Enter amount"
         />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="input-field"
+          placeholder="Enter date"
         />
         <input
           type="text"
-          placeholder="Note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="input-field"
+          placeholder="Enter note"
         />
-        <button className="button-primary" onClick={handleAddExpenditure}>
-          Add Expenditure
-        </button>
+        <button onClick={handleAddExpenditure}>Add Expenditure</button>
       </div>
 
-      <div className="expenditures-list">
-        <h2>Expenditures</h2>
+      <div className="expenditure-log">
+        <h2>Expenditure Log</h2>
         {expenditures.length > 0 ? (
           expenditures.map((exp, index) => (
-            <div key={index} className="expenditure-item">
-              <p>${exp.amount} - {exp.note} ({exp.date})</p>
-            </div>
+            <p key={index}>
+              ${exp.amount} - {exp.note} ({exp.date})
+            </p>
           ))
         ) : (
           <p>No expenditures yet.</p>
         )}
       </div>
+
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
