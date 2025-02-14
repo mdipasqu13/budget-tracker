@@ -52,14 +52,26 @@ function BudgetTracker({ userId }) {
       });
       alert("Budget updated!");
 
-      // Update remaining budget directly to match new budget
       setRemainingBudget(budget);
+
+      const currentDate = new Date().toLocaleString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      });
+      setExpenditures([
+        ...expenditures,
+        { amount: 0, note: `New budget set to $${budget}`, date: currentDate },
+      ]);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Add a new expenditure
   const handleAddExpenditure = async () => {
     if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
       alert("Please enter a valid expenditure amount.");
@@ -90,6 +102,14 @@ function BudgetTracker({ userId }) {
     }
   };
 
+  const handleKeyPressSetBudget = (e) => {
+    if (e.key === "Enter") handleSetBudget();
+  };
+
+  const handleKeyPressAddExpenditure = (e) => {
+    if (e.key === "Enter") handleAddExpenditure();
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("userId");
     navigate("/");
@@ -106,6 +126,7 @@ function BudgetTracker({ userId }) {
           type="number"
           value={budget}
           onChange={(e) => setBudget(parseFloat(e.target.value))}
+          onKeyPress={handleKeyPressSetBudget}
           placeholder="Enter your budget"
         />
         <button onClick={handleSetBudget}>Set Budget</button>
@@ -118,6 +139,7 @@ function BudgetTracker({ userId }) {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          onKeyPress={handleKeyPressAddExpenditure}
           placeholder="Enter amount"
         />
         <input
@@ -130,6 +152,7 @@ function BudgetTracker({ userId }) {
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
+          onKeyPress={handleKeyPressAddExpenditure}
           placeholder="Enter note"
         />
         <button onClick={handleAddExpenditure}>Add Expenditure</button>
