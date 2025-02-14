@@ -4,8 +4,9 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///budget.db'  
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///budget.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking
+
 db = SQLAlchemy(app)  # Initialize SQLAlchemy
 bcrypt = Bcrypt(app)  # Initialize Bcrypt for password hashing
 
@@ -47,16 +48,13 @@ def register():
     # Return success message along with user_id
     return jsonify({'message': 'User registered successfully', 'user_id': new_user.id}), 201
 
-
 # Route: Login a user with password verification
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
     user = User.query.filter_by(username=data['username']).first()
-
     if user and bcrypt.check_password_hash(user.password, data['password']):
         return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
-
     return jsonify({'message': 'Invalid credentials'}), 401
 
 # Route for setting a user's budget
@@ -64,12 +62,10 @@ def login():
 def set_budget():
     data = request.json
     user = User.query.get(data['user_id'])
-
     if user:
         user.budget = data['budget']
         db.session.commit()
         return jsonify({'message': 'Budget updated successfully'}), 200
-
     return jsonify({'message': 'User not found'}), 404
 
 # Route for adding an expenditure for a user
@@ -77,7 +73,6 @@ def set_budget():
 def add_expenditure():
     data = request.json
     user = User.query.get(data['user_id'])
-
     if user:
         new_expenditure = Expenditure(
             user_id=user.id,
@@ -89,19 +84,16 @@ def add_expenditure():
         db.session.add(new_expenditure)
         db.session.commit()
         return jsonify({'message': 'Expenditure added successfully'}), 201
-
     return jsonify({'message': 'User not found'}), 404
 
 # Route: Get all expenditures for a user
 @app.route('/get_expenditures/<int:user_id>', methods=['GET'])
 def get_expenditures(user_id):
     expenditures = Expenditure.query.filter_by(user_id=user_id).all()
-    
     result = [
         {'id': exp.id, 'amount': exp.amount, 'date': exp.date, 'note': exp.note}
         for exp in expenditures
     ]
-    
     return jsonify(result), 200
 
 # Route: Get user details (including budget)
@@ -110,7 +102,6 @@ def get_user(user_id):
     user = User.query.get(user_id)
     if user:
         return jsonify({'id': user.id, 'username': user.username, 'budget': user.budget}), 200
-
     return jsonify({'message': 'User not found'}), 404
 
 if __name__ == '__main__':
