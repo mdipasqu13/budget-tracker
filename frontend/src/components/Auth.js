@@ -12,20 +12,14 @@ function Auth({ setUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? "/login" : "/register";
-
     try {
-    //   const response = await axios.post(`http://localhost:5001${endpoint}`, {
-    //     username,
-    //     password,
-    //   });
       const response = await axios.post(`https://budget-tracker-backend-t9tw.onrender.com${endpoint}`, {
         username,
         password,
       });
       alert(response.data.message);
-
       if (response.data.user_id) {
-        setUserId(response.data.user_id); // Save user ID
+        setUserId(response.data.user_id);
         navigate("/tracker");
       }
     } catch (err) {
@@ -34,27 +28,35 @@ function Auth({ setUserId }) {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <div>
-      <h2>{isLogin ? "Login" : "Register"}</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+        <h2>{isLogin ? "Login" : "Register"}</h2>
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <button type="submit">{isLogin ? "Login" : "Register"}</button>
+        <p onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Don't have an account? Register here." : "Already have an account? Login here."}
+        </p>
       </form>
-      <button onClick={() => setIsLogin(!isLogin)}>
-        Switch to {isLogin ? "Register" : "Login"}
-      </button>
     </div>
   );
 }

@@ -143,7 +143,7 @@ function BudgetTracker({ userId }) {
 
   return (
     <div className="budget-tracker">
-      <h1>Welcome, {username}!</h1>
+      <h1>{username}'s Budget Tracker!</h1>
       
       <div>
         <label>Set Budget:</label>
