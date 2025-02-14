@@ -51,12 +51,15 @@ function BudgetTracker({ userId }) {
         budget,
       });
       alert("Budget updated!");
-      fetchData();
+
+      // Update remaining budget directly to match new budget
+      setRemainingBudget(budget);
     } catch (err) {
       console.error(err);
     }
   };
 
+  // Add a new expenditure
   const handleAddExpenditure = async () => {
     if (isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
       alert("Please enter a valid expenditure amount.");
