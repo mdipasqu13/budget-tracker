@@ -92,7 +92,7 @@ function BudgetTracker({ userId }) {
         <input
           type="number"
           placeholder="Set New Budget"
-          value={budget}
+          value={remainingBudget}
           onChange={(e) => setBudget(e.target.value)}
           className="input-field"
         />
