@@ -11,7 +11,7 @@ function BudgetTracker({ userId }) {
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
   const [expenditures, setExpenditures] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); 
   const itemsPerPage = 5; 
   const navigate = useNavigate();
 
@@ -33,6 +33,8 @@ function BudgetTracker({ userId }) {
         0
       );
       setRemainingBudget(responseUser.data.budget - totalExpenditures);
+
+      setCurrentPage(Math.ceil(responseExpenditures.data.length / itemsPerPage));
     } catch (err) {
       console.error(err);
     }
@@ -61,14 +63,17 @@ function BudgetTracker({ userId }) {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
+        // hour: "numeric",
+        // minute: "numeric",
+        // second: "numeric",
       });
-      setExpenditures([
-        ...expenditures,
-        { amount: 0, note: `New budget set to $${budget}`, date: currentDate },
-      ]);
+      const newLog = { note: `New budget set to $${budget}`, date: currentDate };
+      
+      setExpenditures((prevExpenditures) => {
+        const updatedExpenditures = [...prevExpenditures, newLog];
+        setCurrentPage(Math.ceil(updatedExpenditures.length / itemsPerPage));
+        return updatedExpenditures;
+      });
     } catch (err) {
       console.error(err);
     }
@@ -93,7 +98,14 @@ function BudgetTracker({ userId }) {
       });
       alert("Expenditure added!");
 
-      setExpenditures([...expenditures, { amount: expenditureAmount, date, note }]);
+      const newLog = { amount: expenditureAmount, date, note };
+      
+      setExpenditures((prevExpenditures) => {
+        const updatedExpenditures = [...prevExpenditures, newLog];
+        setCurrentPage(Math.ceil(updatedExpenditures.length / itemsPerPage)); 
+        return updatedExpenditures;
+      });
+      
       setRemainingBudget((prev) => prev - expenditureAmount);
 
       setAmount("");
