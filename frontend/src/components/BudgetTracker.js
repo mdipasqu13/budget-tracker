@@ -59,9 +59,9 @@ function BudgetTracker({ userId }) {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
+        // hour: "numeric",
+        // minute: "numeric",
+        // second: "numeric",
       });
       setExpenditures([
         ...expenditures,
